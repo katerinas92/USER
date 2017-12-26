@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Simple.Demo">
+<TimeCreated>64642,40449.975227</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+// first method in my first class
+
+]]></Content>
+</UDLText>
+
+<Method name="Hello">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>name:%String,*nameReversed:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+ set affirmation = ""
+ try {
+	for i=1:1:$length(name) {write !, "Hello World!"}
+	set nameReversed = $reverse(name)
+	set affirmation = name _ " is your friend."
+	}
+	catch ex {
+		write !, ex.Name, " error. Affirmation requires name argument."
+		}
+		return affirmation
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Simple.Human">
+<Super>%Persistent,%Populate</Super>
+<TimeCreated>64642,44527.767067</TimeCreated>
+
+<Parameter name="SPECIES">
+<Default>Человек</Default>
+</Parameter>
+
+<Property name="Name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Required значит поле обязательно для заполнения
+
+]]></Content>
+</UDLText>
+
+<Property name="Phone">
+<Type>%String</Type>
+</Property>
+
+<Property name="Home">
+<Type>Simple.Address</Type>
+</Property>
+
+<Property name="Work">
+<Type>Simple.Address</Type>
+</Property>
+
+<Method name="Print">
+<FormalSpec>state:%String="MA"</FormalSpec>
+<Implementation><![CDATA[
+	write !, ..Name, "lives in ", ..Home.State, ", and is "
+	if (..Home.State = state) {
+		write "a ", ..#SPECIES, ". "
+	}
+	else { 
+		write "an extra-terrestrial. "
+	}
+	write "Phone is: ", ..Phone, "."
+]]></Implementation>
+</Method>
+
+<Method name="Insert">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>nm:%String="",ph:%String="",sta:%String=""</FormalSpec>
+<Implementation><![CDATA[
+	set allEmpty = ((nm = "") && (ph = "") && (sta = ""))
+	quit:(allEmpty) // if all data is empty just quit
+	&sql(insert into simple.human (name, phone, home_state)
+		 values (:nm, :ph, :sta))
+	if (SQLCODE = 0) {
+		&sql(select count(*) into :count from simple.human)
+		write !, count, " records"
+	}
+	else {
+		write !, "SQLCODE: ", SQLCODE, !, %msg
+	}
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Simple.HumanD</DataLocation>
+<DefaultData>HumanDefaultData</DefaultData>
+<IdLocation>^Simple.HumanD</IdLocation>
+<IndexLocation>^Simple.HumanI</IndexLocation>
+<StreamLocation>^Simple.HumanS</StreamLocation>
+<ExtentSize>11</ExtentSize>
+<Data name="HumanDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Phone</Value>
+</Value>
+<Value name="4">
+<Value>State</Value>
+</Value>
+<Value name="5">
+<Value>Home</Value>
+</Value>
+<Value name="6">
+<Value>Work</Value>
+</Value>
+</Data>
+<Property name="%%CLASSNAME">
+<Selectivity>100.0000%</Selectivity>
+<AverageFieldSize>1</AverageFieldSize>
+</Property>
+<Property name="%%ID">
+<Selectivity>1</Selectivity>
+<AverageFieldSize>1.18</AverageFieldSize>
+</Property>
+<Property name="Home">
+<Selectivity>9.0909%,City:10.0000%,State:11.1111%,Street:9.0909%,Zip:9.0909%</Selectivity>
+<AverageFieldSize>35.64,City:7.27,State:2.64,Street:14.91,Zip:5.18</AverageFieldSize>
+</Property>
+<Property name="Name">
+<Selectivity>9.0909%</Selectivity>
+<AverageFieldSize>14.91</AverageFieldSize>
+</Property>
+<Property name="Phone">
+<Selectivity>9.0909%</Selectivity>
+<AverageFieldSize>11.36</AverageFieldSize>
+</Property>
+<Property name="State">
+<Selectivity>8.3333%</Selectivity>
+<AverageFieldSize>2.5</AverageFieldSize>
+</Property>
+<Property name="Work">
+<Selectivity>9.0909%,City:10.0000%,State:10.0000%,Street:9.0909%,Zip:9.0909%</Selectivity>
+<AverageFieldSize>36.64,City:6.73,State:2.64,Street:16.55,Zip:5.18</AverageFieldSize>
+</Property>
+<SQLMap name="IDKEY">
+<BlockCount>-4</BlockCount>
+</SQLMap>
+</Storage>
+
+<Method name="%OnNew">
+<Description><![CDATA[
+This callback method is invoked by the <METHOD>%New</METHOD> method to 
+provide notification that a new instance of an object is being created.
+
+<P>If this method returns an error then the object will not be created.
+<p>It is passed the arguments provided in the %New call.
+When customizing this method, override the arguments with whatever variables and types you expect to receive from %New().
+For example, if you're going to call %New, passing 2 arguments, %OnNew's signature could be:
+<p>Method %OnNew(dob as %Date = "", name as %Name = "") as %Status
+If instead of returning a %Status code this returns an oref and this oref is a subclass of the current
+class then this oref will be the one returned to the caller of %New method.]]></Description>
+<FormalSpec>name:%String="",phone:%String="",hstate:%String="",wstate:%String=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	set ..Name = name
+	set ..Phone = phone
+	set ..Home.State = hstate
+	set ..Work.State = wstate
+	return st
+]]></Implementation>
+</Method>
+</Class>
+</Export>
