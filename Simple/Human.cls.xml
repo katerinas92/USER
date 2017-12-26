@@ -146,6 +146,8 @@ class then this oref will be the one returned to the caller of %New method.]]></
 	set ..Home.State = hstate
 	set ..Work.State = wstate
 	return st
+	
+	//проверка комментария
 ]]></Implementation>
 </Method>
 </Class>
